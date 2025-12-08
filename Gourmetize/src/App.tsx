@@ -28,9 +28,8 @@ function App() {
   }, [theme]);
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
-
-      <Navbar/>
+    <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-950 transition-colors duration-300">
+      <Navbar />
 
       {/* MAIN */}
       <main className="max-w-6xl mx-auto px-4 py-10 sm:py-14 space-y-16">
@@ -38,21 +37,19 @@ function App() {
         <section className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-center">
           {/* Texto */}
           <div className="space-y-6">
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-50/70 px-3 py-1 text-xs font-medium text-amber-700 dark:bg-amber-400/10 dark:text-amber-300 dark:border-amber-400/30">
+            <span className="inline-flex items-center gap-2 rounded-full border border-green-400/40 bg-green-500 px-3 py-1 text-xs font-medium text-slate-950 dark:bg-amber-400/10 dark:text-amber-300 dark:border-amber-400/30">
               🍲 Novo • Plataforma Gourmetize
             </span>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
               Organize seus pedidos, cardápios e clientes
-              <span className="block text-amber-500 dark:text-amber-300">
+              <span className="block   text-green-500 dark:text-amber-300">
                 em um só lugar.
               </span>
             </h1>
 
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-xl">
-              O Gourmetize conecta restaurantes, cozinhas e clientes em uma
-              experiência simples, bonita e inteligente. Em breve, totalmente
-              integrado à sua API para controlar cardápios, pedidos e reservas.
+              O projeto Gourmetize é a ponte tecnológica que conecta a Agricultura Familiar diretamente à sua mesa. Nossa missão é clara: garantir o consumo de produtos frescos e sazonais, reduzir o desperdício alimentar na cadeia de distribuição e construir uma economia local mais justa e sustentável.
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
@@ -80,7 +77,7 @@ function App() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-sky-500" />
-                <span>Pronto para API</span>
+                <span>Pronto para API</span>z
               </div>
             </div>
           </div>
@@ -164,11 +161,12 @@ function App() {
             automatizada — do cardápio ao histórico de clientes.
           </p>
 
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className=" grid gap-4 sm:grid-cols-3">
             <FeatureCard
               icon="📋"
               title="Cadastre seu cardápio"
               description="Organize pratos, categorias, preços e disponibilidade em poucos cliques."
+               
             />
             <FeatureCard
               icon="🧾"
@@ -179,6 +177,7 @@ function App() {
               icon="📊"
               title="Acompanhe resultados"
               description="Analise vendas, ticket médio e pratos mais pedidos em um painel único."
+            
             />
           </div>
         </section>
@@ -206,12 +205,12 @@ function App() {
         </section>
 
         {/* CTA FINAL */}
-        <section className="rounded-3xl border border-dashed border-amber-400/60 bg-amber-50/60 dark:bg-amber-400/10 dark:border-amber-400/40 px-6 py-6 sm:px-8 sm:py-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <section className="rounded-3xl border border-dashed border-slate-400/60 bg-green-300  dark:bg-amber-400/10 dark:border-amber-400/40 px-6 py-6 sm:px-8 sm:py-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">
+            <p className="text-sm font-semibold text-slate-800 dark:text-amber-200">
               Pronto para receber seus primeiros usuários?
             </p>
-            <p className="text-xs sm:text-sm text-amber-900/80 dark:text-amber-100/80 mt-1 max-w-md">
+            <p className="text-xs sm:text-sm text-slate-900/80 dark:text-amber-100/80 mt-1 max-w-md">
               Use essa página como porta de entrada do seu projeto. Mais tarde,
               você pode conectar sua API, implementar login e criar o painel
               interno do Gourmetize.
