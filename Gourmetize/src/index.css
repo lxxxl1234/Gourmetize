@@ -1,9 +1,26 @@
+/* Registrar a fonte Oswald */
+@font-face {
+  font-family: "Oswald";
+  src: url("/fontes/Oswald/Oswald-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Oswald";
+  src: url("/fontes/Oswald/Oswald-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+/* Define Oswald como fonte padrão do Tailwind */
+@theme {
+  --font-sans: "Oswald", sans-serif;
+}
+
+/* Importa Tailwind APÓS definir o theme */
 @import "tailwindcss";
 
-/* Habilita a variante `dark:` baseada na classe `.dark` no HTML */
+/* Seu CSS global */
 @custom-variant dark (&:where(.dark, .dark *));
-
-/* Dica: deixa o browser preparado pra claro/escuro */
 :root {
   color-scheme: light dark;
 }
@@ -16,5 +33,5 @@
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-sans);
 }

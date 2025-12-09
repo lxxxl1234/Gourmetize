@@ -8,10 +8,12 @@ export default function Navbar() {
     <nav className="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
       <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
         <img src={logo} alt="Logo" className="h-10" />
-        <h1 className="text-xl font-semibold text-slate-900 dark:text-white">
+        <h1 className="text-xl font-semibold text-slate-900 dark:text-white oswald text-xl font-semibold text-slate-900 dark:text-white">
           Gourmetize
        </h1>
-          
+        
+
+
         <button
           onClick={() => setOpen(!open)}
           className="md:hidden text-slate-900 dark:text-white text-2xl focus:outline-none"
@@ -46,5 +48,6 @@ export default function Navbar() {
         </ul>
       )}
     </nav>
+    
   );
 }

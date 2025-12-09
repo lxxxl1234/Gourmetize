@@ -40,3 +40,35 @@
 .read-the-docs {
   color: #888;
 }
+@font-face {
+  font-family: "Oswald";
+  src: url("/fontes/Oswald/Oswald-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Oswald";
+  src: url("/fontes/Oswald/Oswald-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+@import "tailwindcss";
+
+/* Registrar a fonte Oswald */
+@font-face {
+  font-family: "Oswald";
+  src: url("/fontes/Oswald/Oswald-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Oswald";
+  src: url("/fontes/Oswald/Oswald-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+/* Tornar Oswald a fonte padrão do Tailwind v4 */
+@theme {
+  --font-sans: "Oswald", sans-serif;
+}
