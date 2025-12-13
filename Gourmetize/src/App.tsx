@@ -84,7 +84,7 @@ function App() {
 
           {/* Card de destaque / “preview” */}
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-amber-400/10 via-rose-500/10 to-sky-500/10 blur-2xl rounded-3xl pointer-events-none" />
+            <div className="absolute -inset-4 bg-linear-to-tr from-amber-400/10 via-rose-500/10 to-sky-500/10 blur-2xl rounded-3xl pointer-events-none" />
             <div className="relative rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 shadow-xl p-4 sm:p-5 space-y-4">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
