@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { loginAccount, loginDemoAdmin, loginDemoProducer } from "../lib/auth";
 import logo from "../assets/imagens/logo.jpeg";
 import {
   EyeIcon,
@@ -22,16 +22,6 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Força da senha (visual)
-  const strength =
-    formData.password.length === 0
-      ? 0
-      : formData.password.length < 6
-      ? 1
-      : formData.password.length < 10
-      ? 2
-      : 3;
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrorMessage(""); // Limpa mensagens de erro ao digitar
@@ -45,17 +35,16 @@ export default function Login() {
     setSuccessMessage("");
 
     try {
-      // Envia os dados para a API do Laravel
-      const response = await axios.post("http://127.0.0.1:8000/api/login", formData);
+      const response = await loginAccount(formData.email, formData.password);
       
-      setSuccessMessage(response.data.message || "Login realizado com sucesso!");
+      setSuccessMessage(response.message || "Login realizado com sucesso!");
       
       // Salva o token no localStorage
-      localStorage.setItem("auth_token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("auth_token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
       
       // Redireciona para a home após 1.5 segundos
-      setTimeout(() => navigate("/"), 1500);
+      setTimeout(() => navigate("/dashboard"), 1500);
 
     } catch (error: any) {
       // Captura os erros de validação do Laravel
@@ -65,6 +54,8 @@ export default function Login() {
         setErrorMessage(firstError[0]);
       } else if (error.response && error.response.data.message) {
         setErrorMessage(error.response.data.message);
+      } else if (error instanceof Error) {
+        setErrorMessage(error.message);
       } else {
         setErrorMessage("Erro ao conectar com o servidor. Tente novamente.");
       }
@@ -77,9 +68,9 @@ export default function Login() {
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-emerald-50/50 dark:bg-slate-950/50">
 
       {/* Fundo decorativo verde */}
-      <div className="absolute inset-0 bg-linear-to-tr from-emerald-200/60 via-lime-100/40 to-teal-200/60" />
-      <div className="absolute -top-32 -left-32 h-96 w-96 bg-emerald-300/40 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 -right-32 h-96 w-96 bg-lime-300/40 rounded-full blur-3xl" />
+      <div className="absolute inset-0 bg-linear-to-tr from-emerald-200/60 via-lime-100/40 to-teal-200/60 dark:from-emerald-950/40 dark:via-slate-900/20 dark:to-teal-950/40" />
+      <div className="absolute -top-32 -left-32 h-96 w-96 bg-emerald-300/40 dark:bg-emerald-700/20 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 -right-32 h-96 w-96 bg-lime-300/40 dark:bg-lime-700/20 rounded-full blur-3xl" />
 
       {/* Card */}
       <ScrollReveal>
@@ -96,10 +87,10 @@ export default function Login() {
 
         {/* Título */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-semibold text-emerald-900">
+          <h1 className="text-3xl font-semibold text-emerald-900 dark:text-emerald-100">
             Gourmetize
           </h1>
-          <p className="mt-1 text-sm text-emerald-700">
+          <p className="mt-1 text-sm text-emerald-700 dark:text-emerald-300">
             Acesse sua conta
           </p>
         </div>
@@ -111,7 +102,7 @@ export default function Login() {
           </div>
         )}
         {successMessage && (
-          <div className="p-3 text-sm text-emerald-700 bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 rounded-lg border border-emerald-200 dark:border-emerald-800 mb-4">
+          <div className="p-3 text-sm text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 rounded-lg border border-emerald-200 dark:border-emerald-800 mb-4">
             {successMessage} Redirecionando...
           </div>
         )}
@@ -121,7 +112,7 @@ export default function Login() {
 
           {/* Email */}
           <div>
-            <label className="block text-xs mb-1 text-emerald-800">
+            <label className="block text-xs mb-1 text-emerald-800 dark:text-emerald-200">
               Email
             </label>
 
@@ -133,14 +124,14 @@ export default function Login() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="email@exemplo.com"
-                className="w-full rounded-xl bg-emerald-50 border border-emerald-300 pl-10 pr-4 py-2.5 text-sm text-emerald-900 placeholder-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
+                className="w-full rounded-xl bg-emerald-50 dark:bg-slate-800/70 border border-emerald-300 dark:border-slate-600 pl-10 pr-4 py-2.5 text-sm text-emerald-900 dark:text-emerald-100 placeholder-emerald-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
               />
             </div>
           </div>
 
           {/* Senha */}
           <div>
-            <label className="block text-xs mb-1 text-emerald-800">
+            <label className="block text-xs mb-1 text-emerald-800 dark:text-emerald-200">
               Senha
             </label>
 
@@ -153,14 +144,14 @@ export default function Login() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="w-full rounded-xl bg-emerald-50 border border-emerald-300 pl-10 pr-12 py-2.5 text-sm text-emerald-900 placeholder-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
+                className="w-full rounded-xl bg-emerald-50 dark:bg-slate-800/70 border border-emerald-300 dark:border-slate-600 pl-10 pr-12 py-2.5 text-sm text-emerald-900 dark:text-emerald-100 placeholder-emerald-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
               />
 
               {/* Mostrar senha */}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 hover:text-emerald-700 transition-transform duration-200 hover:scale-110"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 hover:text-emerald-700 dark:hover:text-emerald-300 transition-transform duration-200 hover:scale-110"
               >
                 {showPassword ? (
                   <EyeSlashIcon className="h-5 w-5" />
@@ -169,31 +160,6 @@ export default function Login() {
                 )}
               </button>
             </div>
-
-            {/* Força da senha */}
-            <div className="mt-2 flex gap-1">
-              <span
-                className={`h-1 w-full rounded transition ${
-                  strength >= 1 ? "bg-red-500" : "bg-emerald-200"
-                }`}
-              />
-              <span
-                className={`h-1 w-full rounded transition ${
-                  strength >= 2 ? "bg-amber-400" : "bg-emerald-200"
-                }`}
-              />
-              <span
-                className={`h-1 w-full rounded transition ${
-                  strength >= 3 ? "bg-emerald-500" : "bg-emerald-200"
-                }`}
-              />
-            </div>
-
-            <p className="mt-1 text-[11px] text-emerald-700">
-              {strength === 1 && "Senha fraca"}
-              {strength === 2 && "Senha média"}
-              {strength === 3 && "Senha forte"}
-            </p>
           </div>
 
           {/* Botão */}
@@ -216,13 +182,17 @@ export default function Login() {
           </button>
 
           {/* Links */}
-          <div className="flex justify-between mt-4 text-xs text-emerald-700">
+          <div className="flex justify-between mt-4 text-xs text-emerald-700 dark:text-emerald-300">
             <span className="hover:underline cursor-pointer">
               Esqueci a senha
             </span>
             <Link to="/registro" className="hover:underline cursor-pointer">
               Criar conta
             </Link>
+          </div>
+          <div className="mt-5 grid grid-cols-2 gap-2">
+            <button type="button" onClick={() => { loginDemoProducer(); navigate("/dashboard"); }} className="rounded-xl border border-dashed border-emerald-300 py-2 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-50">Acessar produtor demo</button>
+            <button type="button" onClick={() => { loginDemoAdmin(); navigate("/dashboard"); }} className="rounded-xl border border-dashed border-emerald-300 py-2 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-50">Acessar admin demo</button>
           </div>
         </div>
         </form>

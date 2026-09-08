@@ -22,7 +22,7 @@
 /* Seu CSS global */
 @custom-variant dark (&:where(.dark, .dark *));
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
 *,
@@ -34,12 +34,40 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
+  background: #f4f7f1;
 }
+
+.font-gourmet-display { font-family: Georgia, "Times New Roman", serif; font-weight: 600; }
+.gourmet-backdrop { background: radial-gradient(circle at 82% 8%, rgb(197 229 204 / .52), transparent 31rem), radial-gradient(circle at 9% 40%, rgb(235 244 217 / .72), transparent 34rem), #f4f7f1; }
+.dark .gourmet-backdrop { background: radial-gradient(circle at 80% 8%, rgb(6 78 59 / .38), transparent 31rem), #091711; }
 
 /* Rolagem suave global para toda a página */
 html {
   scroll-behavior: smooth;
 }
+
+/* Navegação flutuante: fica no fluxo da página e ganha presença ao rolar. */
+.nav-glass { border: 1px solid rgb(255 255 255 / .72); border-radius: 1.125rem; background: rgb(255 255 255 / .70); box-shadow: 0 9px 28px rgb(15 23 42 / .07), inset 0 1px 0 rgb(255 255 255 / .82); backdrop-filter: blur(18px) saturate(150%); -webkit-backdrop-filter: blur(18px) saturate(150%); transition: transform 280ms cubic-bezier(.2,.8,.2,1), box-shadow 280ms ease, background-color 280ms ease; }
+.nav-glass-scrolled { background: rgb(255 255 255 / .80); box-shadow: 0 14px 36px rgb(15 23 42 / .11), inset 0 1px 0 rgb(255 255 255 / .9); transform: translateY(2px) scale(.992); }
+.dark .nav-glass { border-color: rgb(255 255 255 / .13); background: rgb(15 23 42 / .70); box-shadow: 0 12px 30px rgb(2 6 23 / .34), inset 0 1px 0 rgb(255 255 255 / .09); }
+.dark .nav-glass-scrolled { background: rgb(15 23 42 / .84); }
+.nav-link, .nav-mobile-link { color: rgb(51 65 85); font-size: .825rem; font-weight: 600; transition: color 200ms ease, background-color 200ms ease, transform 200ms ease; }
+.nav-link { align-items: center; display: inline-flex; gap: .38rem; border-radius: .7rem; padding: .58rem .78rem; }
+.nav-link:hover { color: rgb(5 150 105); background: rgb(16 185 129 / .10); transform: translateY(-1px); }
+.nav-link:active, .nav-cta:active, .nav-menu-button:active { transform: scale(.96); }
+.nav-cta { align-items: center; gap: .38rem; border-radius: .75rem; background: rgb(5 150 105); box-shadow: 0 7px 16px rgb(5 150 105 / .2); color: white; font-size: .78rem; font-weight: 700; padding: .6rem .78rem; transition: transform 220ms cubic-bezier(.2,.8,.2,1), background-color 220ms ease, box-shadow 220ms ease; }
+.nav-cta:hover { background: rgb(4 120 87); box-shadow: 0 10px 20px rgb(5 150 105 / .3); transform: translateY(-2px); }
+.nav-cta svg:last-child { transition: transform 200ms ease; }.nav-cta:hover svg:last-child { transform: translate(2px,-2px); }
+.nav-login { align-items: center; gap: .38rem; border-radius: .75rem; color: rgb(51 65 85); font-size: .78rem; font-weight: 700; padding: .6rem .68rem; transition: background-color 200ms ease, color 200ms ease, transform 200ms ease; }.nav-login:hover { background: rgb(16 185 129 / .10); color: rgb(5 150 105); transform: translateY(-1px); }.dark .nav-login { color: rgb(226 232 240); }
+.nav-menu-button { display: grid; height: 2.45rem; width: 2.45rem; place-items: center; border: 1px solid rgb(15 23 42 / .1); border-radius: .75rem; color: rgb(15 23 42); transition: background-color 200ms ease, transform 200ms ease; }.nav-menu-button:hover { background: rgb(16 185 129 / .11); }
+.nav-mobile-link { display: flex; align-items: center; justify-content: space-between; border-radius: .65rem; padding: .72rem; }.nav-mobile-link:hover { background: rgb(16 185 129 / .10); color: rgb(5 150 105); }
+.nav-mobile-action { display: flex; align-items: center; justify-content: center; gap: .35rem; border-radius: .65rem; font-size: .78rem; font-weight: 700; padding: .68rem .45rem; transition: transform 200ms ease, background-color 200ms ease; }.nav-mobile-action:active { transform: scale(.97); }.nav-mobile-login { background: rgb(16 185 129 / .10); color: rgb(5 150 105); }.nav-mobile-create { background: rgb(5 150 105); color: white; }
+.dark .nav-link, .dark .nav-mobile-link, .dark .nav-menu-button { color: rgb(226 232 240); }.dark .nav-menu-button { border-color: rgb(255 255 255 / .13); }
+.nav-link:focus-visible, .nav-cta:focus-visible, .nav-login:focus-visible, .nav-menu-button:focus-visible, .nav-mobile-link:focus-visible, .nav-mobile-action:focus-visible { outline: 2px solid rgb(5 150 105); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .nav-glass, .nav-link, .nav-cta, .nav-menu-button, .nav-mobile-link, .nav-cta svg:last-child { transition: none; } }
+
+.dash-input { display:block; width:100%; margin-top:.45rem; border:1px solid rgb(203 213 225); border-radius:.75rem; background:white; padding:.7rem .8rem; font-size:.875rem; font-weight:400; outline:none; }
+.dash-input:focus { border-color:rgb(5 150 105); box-shadow:0 0 0 3px rgb(16 185 129 / .16); }
 
 /* Animação personalizada para o fundo flutuante */
 @keyframes float {

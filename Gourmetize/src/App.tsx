@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { useEffect, useState, type ReactNode } from "react";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 import Navbar from "./components/navbar";
 import Login from "./pages/Login";  
 import EscolhaCadastro from "./pages/EscolhaCadastro";
@@ -11,171 +11,47 @@ import Política_privacidade from "./pages/Política_privacidade";
 import ScrollReveal from "./components/ScrollReveal";
 import ScrollToTop from "./components/ScrollToTop";
 import MouseGradient from "./components/MouseGradient";
-import AnimatedHeading from "./components/AnimatedHeading";
+import { ArrowRight, HeartHandshake, MapPin, PackageCheck } from "lucide-react";
+import harvestHero from "./assets/imagens/gourmetize-harvest-hero.png";
+import Dashboard from "./pages/Dashboard";
+import NotFound from "./pages/NotFound";
  
 type Theme = "light" | "dark";
 
 function Home() {
   return (
-    <main className="max-w-6xl mx-auto px-4 py-10 sm:py-14 space-y-16">
-      {/* HERO */}
+    <main className="max-w-6xl mx-auto px-4 py-8 sm:py-12 space-y-20 sm:space-y-28">
       <ScrollReveal>
-      <section className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-center">
-        {/* Texto */}
-        <div className="space-y-6">
-          <span className="inline-flex items-center gap-2 rounded-full border border-green-400/40 bg-green-500 px-3 py-1 text-xs font-medium text-slate-950 dark:bg-amber-400/10 dark:text-amber-300 dark:border-amber-400/30">
-            🍲 Novo • Plataforma Gourmetize
-          </span>
-
-          <AnimatedHeading 
-            words={[
-              { text: "Organize" },
-              { text: "seus" },
-              { text: "pedidos," },
-              { text: "cardápios" },
-              { text: "e" },
-              { text: "clientes" },
-              { text: "em", className: "text-green-500 dark:text-amber-300" },
-              { text: "um", className: "text-green-500 dark:text-amber-300" },
-              { text: "só", className: "text-green-500 dark:text-amber-300" },
-              { text: "lugar.", className: "text-green-500 dark:text-amber-300" }
-            ]}
-            className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight leading-tight text-slate-900 dark:text-slate-50"
-          />
-
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-xl">
-            O projeto Gourmetize é a ponte tecnológica que conecta a Agricultura Familiar diretamente à sua mesa. Nossa missão é clara: garantir o consumo de produtos frescos e sazonais, reduzir o desperdício alimentar na cadeia de distribuição e construir uma economia local mais justa e sustentável.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <Link to="/registro" className="inline-flex items-center justify-center rounded-full bg-slate-900 text-slate-50 dark:bg-amber-400 dark:text-slate-900 px-5 py-2.5 text-sm font-medium hover:opacity-90 transition shadow-sm">
-              Criar conta
-            </Link>
-
-            <Link to="/login" className="inline-flex items-center justify-center rounded-full border border-slate-300 dark:border-slate-600 px-5 py-2.5 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-              Já tenho conta
-            </Link>
-
-            <span className="text-xs text-slate-500 dark:text-slate-400">
-              • Não precisa cartão de crédito para testar
-            </span>
+        <section id="inicio" className="scroll-mt-28 grid items-center gap-10 lg:grid-cols-[.92fr_1.08fr] lg:gap-16">
+          <div className="space-y-7 lg:py-8">
+            <p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-700 dark:text-emerald-300">Comida boa começa perto</p>
+            <h1 className="font-gourmet-display max-w-xl text-5xl leading-[.96] tracking-[-.045em] text-emerald-950 sm:text-6xl lg:text-7xl dark:text-white">Da horta da sua região para a sua mesa.</h1>
+            <p className="max-w-lg text-base leading-7 text-slate-600 dark:text-slate-300">Descubra alimentos frescos de pequenos produtores, acompanhe sua origem e fortaleça a economia local a cada pedido.</p>
+            <div className="flex flex-wrap gap-3">
+              <Link to="/registro" className="group inline-flex items-center gap-2 rounded-full bg-emerald-800 px-5 py-3 text-sm font-bold text-white shadow-[0_10px_24px_rgba(6,78,59,.2)] transition duration-300 hover:-translate-y-0.5 hover:bg-emerald-900 hover:shadow-[0_14px_28px_rgba(6,78,59,.3)]">Criar minha conta <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" /></Link>
+              <Link to="/login" className="inline-flex items-center rounded-full border border-emerald-950/15 px-5 py-3 text-sm font-bold text-emerald-950 transition hover:border-emerald-800 hover:bg-emerald-950/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10">Já tenho conta</Link>
+            </div>
+            <p className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400"><span className="h-2 w-2 rounded-full bg-emerald-500" /> Sem cartão, sem compromisso para começar.</p>
           </div>
-
-          <div className="flex flex-wrap gap-4 text-xs text-slate-500 dark:text-slate-400">
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              <span>Disponível 24/7</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-amber-500" />
-              <span>Painel em tempo real</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-sky-500" />
-              <span>Pronto para API</span>z
-            </div>
-          </div>
-        </div>
-
-        {/* Card de destaque / “preview” */}
-        <div className="relative">
-          <div className="absolute -inset-4 bg-linear-to-tr from-amber-400/10 via-rose-500/10 to-sky-500/10 blur-2xl rounded-3xl pointer-events-none" />
-          <div className="relative rounded-3xl border border-white/20 dark:border-slate-700/50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md shadow-xl p-4 sm:p-5 space-y-4">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                Visão geral do dia
-              </span>
-              <span className="text-[10px] rounded-full bg-emerald-500/10 text-emerald-500 px-2 py-0.5">
-                Online
-              </span>
-            </div>
-
-            <div className="grid grid-cols-3 gap-3 text-xs">
-              <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/80 p-3">
-                <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                  Pedidos hoje
-                </span>
-                <p className="mt-1 text-xl font-semibold">32</p>
-                <p className="text-[10px] text-emerald-500 mt-1">
-                  ▲ +12% vs ontem
-                </p>
-              </div>
-              <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/80 p-3">
-                <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                  Ticket médio
-                </span>
-                <p className="mt-1 text-xl font-semibold">R$ 78</p>
-                <p className="text-[10px] text-slate-500 mt-1">
-                  / por cliente
-                </p>
-              </div>
-              <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/80 p-3">
-                <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                  Avaliação
-                </span>
-                <p className="mt-1 text-xl font-semibold flex items-center gap-1">
-                  ⭐ 4.8
-                </p>
-                <p className="text-[10px] text-slate-500 mt-1">
-                  + 210 reviews
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-3 border-t border-slate-200 dark:border-slate-800 pt-3 space-y-2">
-              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                Próximos horários
-              </p>
-              <div className="flex flex-col gap-2 text-xs">
-                <div className="flex items-center justify-between rounded-xl bg-slate-50 dark:bg-slate-800/80 px-3 py-2">
-                  <span>Reserva • 19:30</span>
-                  <span className="text-slate-500 dark:text-slate-400">
-                    4 pessoas
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl bg-slate-50 dark:bg-slate-800/80 px-3 py-2">
-                  <span>Delivery • em preparo</span>
-                  <span className="text-slate-500 dark:text-slate-400">
-                    Pedido #1243
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+          <figure className="relative overflow-hidden rounded-[2rem] bg-emerald-950 shadow-[0_28px_65px_rgba(20,58,42,.24)]">
+            <img src={harvestHero} alt="Colheita fresca de um pequeno produtor local" className="aspect-[4/3] h-full w-full object-cover object-[62%_center]" />
+            <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-emerald-950/80 via-emerald-950/25 to-transparent px-6 pb-6 pt-14 text-sm font-medium text-white">Produtos colhidos no ritmo da estação.</figcaption>
+          </figure>
+        </section>
       </ScrollReveal>
 
       {/* COMO FUNCIONA */}
       <ScrollReveal delay={200}>
-      <section className="space-y-4">
-        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
-          Como o Gourmetize funciona?
-        </h2>
-        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl">
-          A ideia é simples: você conecta sua cozinha ao mundo digital.
-          Depois, será possível plugar sua API para controlar tudo de forma
-          automatizada — do cardápio ao histórico de clientes.
-        </p>
-
-        <div className=" grid gap-4 sm:grid-cols-3">
-          <FeatureCard
-            icon="📋"
-            title="Cadastre seu cardápio"
-            description="Organize pratos, categorias, preços e disponibilidade em poucos cliques."
-             
-          />
-          <FeatureCard
-            icon="🧾"
-            title="Receba pedidos"
-            description="Visualize pedidos em tempo real, com status claros para a equipe."
-          />
-          <FeatureCard
-            icon="📊"
-            title="Acompanhe resultados"
-            description="Analise vendas, ticket médio e pratos mais pedidos em um painel único."
-          
-          />
+      <section id="sobre" className="scroll-mt-28 space-y-8">
+        <div className="max-w-2xl space-y-3">
+          <p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-700 dark:text-emerald-300">Simples por natureza</p>
+          <h2 className="font-gourmet-display text-4xl tracking-[-.035em] text-emerald-950 sm:text-5xl dark:text-white">Uma feira local que cabe na rotina.</h2>
+          <p className="text-base leading-7 text-slate-600 dark:text-slate-300">Você escolhe o que precisa. Quem produz prepara com cuidado. A entrega aproxima bons ingredientes da sua casa.</p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-[1.25fr_.9fr_.9fr]">
+          <FeatureCard icon={<MapPin size={23} />} step="01" title="Encontre perto de você" description="Veja produtores da sua região e escolha alimentos que respeitam o tempo da colheita." className="md:min-h-72" />
+          <FeatureCard icon={<PackageCheck size={23} />} step="02" title="Peça com clareza" description="Monte sua compra e acompanhe cada etapa, da confirmação à entrega." />
+          <FeatureCard icon={<HeartHandshake size={23} />} step="03" title="Faça parte da rede" description="Seu pedido remunera melhor quem cultiva e movimenta a comunidade." />
         </div>
       </section>
       </ScrollReveal>
@@ -185,9 +61,8 @@ function Home() {
       <section className="space-y-6">
         <div className="flex items-end justify-between">
           <div>
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
-              Negocios que amamos
-            </h2>
+          <p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-700 dark:text-emerald-300">Da nossa rede</p>
+          <h2 className="font-gourmet-display mt-2 text-4xl tracking-[-.035em] text-emerald-950 sm:text-5xl dark:text-white">Cada produto tem uma história.</h2>
           </div>
         </div>
 
@@ -206,20 +81,20 @@ function Home() {
             </div>
             <div className="p-5">
               <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">Sabor & Arte</h3>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">Sítio Boa Terra</h3>
                 <span className="flex items-center gap-1 text-sm font-semibold text-amber-500">
                   ★ 4.8
                 </span>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Cozinha contemporânea com ingredientes locais e frescos.
+                Hortaliças e temperos cultivados em pequena escala, a poucos quilômetros da cidade.
               </p>
               <div className="mt-4 flex gap-2">
                 <span className="px-2 py-1 text-xs rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
-                  Saudável
+                  Agricultura familiar
                 </span>
                 <span className="px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300">
-                  Fácil 
+                  Colheita da semana
                 </span>
               </div>
             </div>
@@ -237,20 +112,20 @@ function Home() {
             </div>
             <div className="p-5">
               <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">Forno a Lenha</h3>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">Forno do Vale</h3>
                 <span className="flex items-center gap-1 text-sm font-semibold text-amber-500">
                   ★ 4.9
                 </span>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Pizzas artesanais com massa de fermentação natural de 48h.
+                Pães de fermentação natural feitos com farinha local e receitas de família.
               </p>
               <div className="mt-4 flex gap-2">
                 <span className="px-2 py-1 text-xs rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
-                  Italiana
+                  Artesanal
                 </span>
                 <span className="px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300">
-                  Delivery
+                  Feito no dia
                 </span>
               </div>
             </div>
@@ -268,20 +143,20 @@ function Home() {
             </div>
             <div className="p-5">
               <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">Doce Encanto</h3>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">Casa do Mel</h3>
                 <span className="flex items-center gap-1 text-sm font-semibold text-amber-500">
                   ★ 4.7
                 </span>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Sobremesas exclusivas e café especial de origem única.
+                Mel puro, cafés e conservas que carregam a paisagem de onde vieram.
               </p>
               <div className="mt-4 flex gap-2">
                 <span className="px-2 py-1 text-xs rounded-full bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300">
-                  Cafeteria
+                  Origem rastreável
                 </span>
                 <span className="px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300">
-                  Brunch
+                  Produção local
                 </span>
               </div>
             </div>
@@ -293,22 +168,21 @@ function Home() {
       {/* PARA QUEM É */}
       <ScrollReveal delay={400}>
       <section className="space-y-4">
-        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
-          Para quem o Gourmetize foi pensado?
-        </h2>
+        <p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-700 dark:text-emerald-300">Uma rede, muitos jeitos de participar</p>
+        <h2 className="font-gourmet-display text-4xl tracking-[-.035em] text-emerald-950 sm:text-5xl dark:text-white">Para quem acredita no valor da origem.</h2>
 
         <div className="grid gap-4 sm:grid-cols-3">
           <TagCard
-            title="Restaurantes e bistrôs"
-            text="Precisa de organização sem perder o toque artesanal."
+            title="Para quem compra"
+            text="Quer comida de verdade, escolhas mais conscientes e uma relação direta com a origem."
           />
           <TagCard
-            title="Cozinhas pequenas"
-            text="Dark kitchens, food trucks e chefs independentes."
+            title="Para quem produz"
+            text="Busca novos caminhos para vender, organizar pedidos e ser reconhecido pelo próprio trabalho."
           />
           <TagCard
-            title="Projetos pessoais"
-            text="Ideal para testar sua API ou MVP de delivery próprio."
+            title="Para quem transforma"
+            text="Restaurantes e cozinhas que querem ingredientes próximos, justos e cheios de sabor."
           />
         </div>
       </section>
@@ -316,20 +190,12 @@ function Home() {
 
       {/* CTA FINAL */}
       <ScrollReveal delay={600}>
-      <section className="rounded-3xl border border-dashed border-slate-400/60 bg-green-300/50 dark:bg-amber-400/10 dark:border-amber-400/40 backdrop-blur-md px-6 py-6 sm:px-8 sm:py-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <section id="contatos" className="scroll-mt-28 rounded-[2rem] bg-emerald-950 px-7 py-9 text-white shadow-[0_22px_50px_rgba(20,58,42,.18)] sm:px-10 sm:py-11 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div>
-          <p className="text-sm font-semibold text-slate-800 dark:text-amber-200">
-            Pronto para receber seus primeiros usuários?
-          </p>
-          <p className="text-xs sm:text-sm text-slate-900/80 dark:text-amber-100/80 mt-1 max-w-md">
-            Use essa página como porta de entrada do seu projeto. Mais tarde,
-            você pode conectar sua API, implementar login e criar o painel
-            interno do Gourmetize.
-          </p>
+          <p className="font-gourmet-display text-3xl tracking-[-.025em]">Comece pela sua região.</p>
+          <p className="mt-2 max-w-md text-sm leading-6 text-emerald-100/80">Crie sua conta para descobrir produtores, organizar pedidos ou trazer seu trabalho para mais perto das pessoas.</p>
         </div>
-        <button className="inline-flex items-center justify-center rounded-full bg-slate-900 text-slate-50 dark:bg-amber-400 dark:text-slate-900 px-5 py-2.5 text-xs sm:text-sm font-medium hover:opacity-90 transition shadow-sm">
-          Começar configuração
-        </button>
+        <Link to="/registro" className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-emerald-950 transition hover:-translate-y-0.5 hover:bg-emerald-50">Quero participar <ArrowRight size={16} /></Link>
       </section>
       </ScrollReveal>
     </main>
@@ -338,6 +204,8 @@ function Home() {
 
 function App() {
   const [theme, setTheme] = useState<Theme>("light");
+  const location = useLocation();
+  const isDashboard = location.pathname === "/dashboard";
 
   // Carrega preferência salva ou do sistema
   useEffect(() => {
@@ -365,7 +233,7 @@ function App() {
       {/* Fundo animado que segue o mouse */}
       <MouseGradient />
 
-      <Navbar />
+      {!isDashboard && <Navbar />}
 
       {/* ROTEAMENTO */}
       <Routes>
@@ -377,13 +245,15 @@ function App() {
         <Route path="/privacidade" element={<Política_privacidade />} />
         <Route path="/cookies" element={<Política_cookies />} />
         <Route path="/registro-produtor" element={<RegistroProdutor />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       {/* Botão flutuante para voltar ao topo */}
-      <ScrollToTop />
+      {!isDashboard && <ScrollToTop />}
 
       {/* FOOTER */}
- <footer className="border-t border-slate-200/70 dark:border-slate-800/80 mt-6 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-sm">
+ {!isDashboard && <footer className="border-t border-slate-200/70 dark:border-slate-800/80 mt-6 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-sm">
   <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
     <span>© {new Date().getFullYear()} Gourmetize. Todos os direitos reservados.</span>
     <span className="flex gap-3">
@@ -393,6 +263,7 @@ function App() {
     </span>
   </div>
 </footer>
+}
     </div>
   );
 }
@@ -402,17 +273,22 @@ function App() {
 // =============================================
 
 type FeatureCardProps = {
-  icon: string;
+  icon: ReactNode;
+  step: string;
   title: string;
   description: string;
+  className?: string;
 };
 
-function FeatureCard({ icon, title, description }: FeatureCardProps) {
+function FeatureCard({ icon, step, title, description, className = "" }: FeatureCardProps) {
   return (
-    <div className="rounded-2xl border border-white/20 dark:border-slate-700/50 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md p-4 space-y-2 shadow-sm">
-      <div className="text-2xl">{icon}</div>
-      <h3 className="text-sm font-semibold">{title}</h3>
-      <p className="text-xs text-slate-600 dark:text-slate-300">{description}</p>
+    <div className={`group rounded-[1.5rem] border border-emerald-950/10 bg-white/70 p-6 shadow-[0_12px_28px_rgba(20,58,42,.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_34px_rgba(20,58,42,.12)] dark:border-white/10 dark:bg-slate-900/70 ${className}`}>
+      <div className="flex items-start justify-between">
+        <div className="grid h-11 w-11 place-items-center rounded-2xl bg-emerald-100 text-emerald-800 transition-transform duration-300 group-hover:scale-105 dark:bg-emerald-400/15 dark:text-emerald-300">{icon}</div>
+        <span className="text-xs font-bold tracking-[.14em] text-emerald-800/55 dark:text-emerald-200/50">{step}</span>
+      </div>
+      <h3 className="mt-9 text-lg font-bold text-emerald-950 dark:text-white">{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{description}</p>
     </div>
   );
 }
@@ -424,9 +300,10 @@ type TagCardProps = {
 
 function TagCard({ title, text }: TagCardProps) {
   return (
-    <div className="rounded-2xl border border-white/20 dark:border-slate-700/50 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md p-4 space-y-1">
-      <h3 className="text-sm font-semibold">{title}</h3>
-      <p className="text-xs text-slate-600 dark:text-slate-300">{text}</p>
+    <div className="rounded-[1.5rem] border border-emerald-950/10 bg-white/60 p-5 dark:border-white/10 dark:bg-slate-900/60">
+      <div className="mb-5 h-px w-8 bg-emerald-600" />
+      <h3 className="text-base font-bold text-emerald-950 dark:text-white">{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{text}</p>
     </div>
   );
 }

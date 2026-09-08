@@ -1,4 +1,3 @@
-import React from "react";
 import ScrollReveal from "../components/ScrollReveal";
 import { Link } from "react-router-dom";
 
@@ -6,7 +5,7 @@ const TermsOfUse = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
       <ScrollReveal>
-        <Link to="/" className="text-sm text-green-600 dark:text-green-400 hover:underline mb-4 inline-block">
+        <Link to="/" className="text-sm text-emerald-600 dark:text-emerald-400 hover:underline mb-4 inline-block">
           <strong> ← Voltar para a página inicial</strong>
         </Link> 
         <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">

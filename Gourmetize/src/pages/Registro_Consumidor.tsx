@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { registerAccount, verifyAccount } from "../lib/auth";
 import logo from "../assets/imagens/logo.jpeg";
 import {
   EyeIcon,
@@ -23,6 +23,7 @@ export default function RegisterConsumer() {
   const [step, setStep] = useState<'form' | 'verify'>('form');
   const [userEmail, setUserEmail] = useState("");
   const [verifyCode, setVerifyCode] = useState("");
+  const [localVerificationCode, setLocalVerificationCode] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Botão de olho para confirmar senha
@@ -96,8 +97,11 @@ export default function RegisterConsumer() {
     formData.address.trim() !== "" &&
     formData.email.trim() !== "" &&
     formData.email_confirmation.trim() !== "" &&
+    formData.email.trim().toLowerCase() === formData.email_confirmation.trim().toLowerCase() &&
     formData.password.trim() !== "" &&
     formData.password_confirmation.trim() !== "" &&
+    formData.password.length >= 8 &&
+    formData.password === formData.password_confirmation &&
     acceptedTerms;
 
   // 1. Enviar formulário de cadastro (Passo 1)
@@ -118,20 +122,19 @@ export default function RegisterConsumer() {
         data.append('profile_picture', profilePicture);
       }
 
-      const response = await axios.post("http://127.0.0.1:8000/api/register", data, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const response = await registerAccount(data);
       
       // Salva o email para usar na próxima etapa e muda para a tela de verificação
       setUserEmail(formData.email);
       setStep('verify');
-      setSuccessMessage(response.data.message || "Cadastro realizado! Verifique seu email.");
+      setLocalVerificationCode(response.verificationCode ?? "");
+      setSuccessMessage(response.message || "Cadastro realizado! Verifique seu email.");
     } catch (error: any) {
       if (error.response?.data?.errors) {
         const firstError = Object.values(error.response.data.errors)[0] as string[];
         setErrorMessage(firstError[0]);
       } else {
-        setErrorMessage(error.response?.data?.message || "Erro ao conectar com o servidor.");
+        setErrorMessage(error.response?.data?.message || error.message || "Erro ao conectar com o servidor.");
       }
     } finally {
       setIsLoading(false);
@@ -148,15 +151,12 @@ export default function RegisterConsumer() {
     setSuccessMessage("");
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/verify-email", {
-        email: userEmail,
-        code: verifyCode,
-      });
+      const response = await verifyAccount(userEmail, verifyCode);
       
-      setSuccessMessage(response.data.message || "Email verificado com sucesso!");
+      setSuccessMessage(response.message || "Email verificado com sucesso!");
       setTimeout(() => navigate("/login"), 2000);
     } catch (error: any) {
-      setErrorMessage(error.response?.data?.message || "Código inválido ou expirado.");
+      setErrorMessage(error.response?.data?.message || error.message || "Código inválido ou expirado.");
     } finally {
       setIsLoading(false);
     }
@@ -164,9 +164,9 @@ export default function RegisterConsumer() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-emerald-50/50 dark:bg-slate-950/50 overflow-hidden">
-      <div className="absolute inset-0 bg-linear-to-tr from-emerald-200/60 via-lime-100/40 to-teal-200/60" />
-      <div className="absolute -top-32 -left-32 h-96 w-96 bg-emerald-300/40 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 -right-32 h-96 w-96 bg-lime-300/40 rounded-full blur-3xl" />
+      <div className="absolute inset-0 bg-linear-to-tr from-emerald-200/60 via-lime-100/40 to-teal-200/60 dark:from-emerald-950/40 dark:via-slate-900/20 dark:to-teal-950/40" />
+      <div className="absolute -top-32 -left-32 h-96 w-96 bg-emerald-300/40 dark:bg-emerald-700/20 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 -right-32 h-96 w-96 bg-lime-300/40 dark:bg-lime-700/20 rounded-full blur-3xl" />
 
       <ScrollReveal>
         <div className="relative z-10 w-full max-w-2xl rounded-3xl border border-white/20 dark:border-slate-700/50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md shadow-2xl px-8 py-10">
@@ -178,27 +178,22 @@ export default function RegisterConsumer() {
             <div className="p-3 text-sm text-red-700 bg-red-100 dark:bg-red-900/30 dark:text-red-300 rounded-lg border border-red-200 dark:border-red-800 mb-4 text-center">{errorMessage}</div>
           )}
           {successMessage && (
-            <div className="p-3 text-sm text-emerald-700 bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 rounded-lg border border-emerald-200 dark:border-emerald-800 mb-4 text-center">{successMessage}</div>
+            <div className="p-3 text-sm text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 rounded-lg border border-emerald-200 dark:border-emerald-800 mb-4 text-center">{successMessage}</div>
           )}
 
           {/* --- TELA 1: Formulário de Cadastro --- */}
           {step === 'form' && (
             <>
               <div className="text-center mb-8">
-                <h1 className="text-2xl font-semibold text-emerald-900">Cadastro de Consumidor</h1>
-                <p className="text-sm text-emerald-700">Crie sua conta para começar</p>
+                <h1 className="text-2xl font-semibold text-emerald-900 dark:text-emerald-100">Cadastro de Consumidor</h1>
+                <p className="text-sm text-emerald-700 dark:text-emerald-300">Crie sua conta para começar</p>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-3 mb-6">
-                <button type="button" className="rounded-xl border border-emerald-300 py-2 text-sm font-medium text-emerald-800 hover:bg-emerald-50 transition">Continuar com Google</button>
-                <button type="button" className="rounded-xl border border-emerald-300 py-2 text-sm font-medium text-emerald-800 hover:bg-emerald-50 transition">Continuar com iOS</button>
-              </div>
-
-              <div className="text-center text-xs text-emerald-600 mb-6">ou preencha o formulário abaixo</div>
+              <p className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50/70 px-4 py-3 text-center text-xs leading-5 text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-200">Use seu e-mail para criar uma conta e confirmar o acesso com segurança.</p>
 
               {/* --- ÁREA DE UPLOAD DE FOTO DE PERFIL COM PRÉ-VISUALIZAÇÃO --- */}
               <div className="flex justify-center mb-6">
-                <label className="relative h-24 w-24 rounded-full border-2 border-dashed border-emerald-400 flex items-center justify-center text-emerald-600 text-xs cursor-pointer hover:bg-emerald-50 transition overflow-hidden group">
+                <label className="relative h-24 w-24 rounded-full border-2 border-dashed border-emerald-400 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xs cursor-pointer hover:bg-emerald-50 dark:hover:bg-slate-800 transition overflow-hidden group">
                   {previewUrl ? (
                     <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
                   ) : (
@@ -231,23 +226,23 @@ export default function RegisterConsumer() {
                   <Input icon={EnvelopeIcon} label="Confirmar email" name="email_confirmation" value={formData.email_confirmation} onChange={handleChange} type="email" />
 
                   <div>
-                    <label className="text-xs text-emerald-800">Senha</label>
+                    <label className="text-xs text-emerald-800 dark:text-emerald-200">Senha</label>
                     <div className="relative">
                       <LockClosedIcon className="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500" />
-                      <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleChange} className="w-full rounded-xl bg-emerald-50 border border-emerald-300 pl-10 pr-12 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 hover:text-emerald-700 transition-transform duration-200 hover:scale-110">
+                      <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleChange} className="w-full rounded-xl bg-emerald-50 dark:bg-slate-800/70 border border-emerald-300 dark:border-slate-600 pl-10 pr-12 py-2.5 text-sm text-slate-900 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 hover:text-emerald-700 dark:hover:text-emerald-300 transition-transform duration-200 hover:scale-110">
                         {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
                       </button>
                     </div>
                     <div className="mt-2 flex gap-1">
-                      <span className={`h-1 w-full rounded ${strength >= 1 ? "bg-red-500" : "bg-emerald-200"}`} />
-                      <span className={`h-1 w-full rounded ${strength >= 2 ? "bg-amber-400" : "bg-emerald-200"}`} />
-                      <span className={`h-1 w-full rounded ${strength >= 3 ? "bg-emerald-500" : "bg-emerald-200"}`} />
+                      <span className={`h-1 w-full rounded ${strength >= 1 ? "bg-red-500" : "bg-emerald-200 dark:bg-slate-700"}`} />
+                      <span className={`h-1 w-full rounded ${strength >= 2 ? "bg-amber-400" : "bg-emerald-200 dark:bg-slate-700"}`} />
+                      <span className={`h-1 w-full rounded ${strength >= 3 ? "bg-emerald-500" : "bg-emerald-200 dark:bg-slate-700"}`} />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs text-emerald-800">Confirmar senha</label>
+                    <label className="text-xs text-emerald-800 dark:text-emerald-200">Confirmar senha</label>
                     <div className="relative">
                       <LockClosedIcon className="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500" />
                       <input 
@@ -255,27 +250,27 @@ export default function RegisterConsumer() {
                         name="password_confirmation" 
                         value={formData.password_confirmation} 
                         onChange={handleChange} 
-                        className="w-full rounded-xl bg-emerald-50 border border-emerald-300 pl-10 pr-12 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                        className="w-full rounded-xl bg-emerald-50 dark:bg-slate-800/70 border border-emerald-300 dark:border-slate-600 pl-10 pr-12 py-2.5 text-sm text-slate-900 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" 
                       />
-                      <button 
+              <button
                         type="button" 
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)} 
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 hover:text-emerald-700 transition-transform duration-200 hover:scale-110"
-                      >
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 hover:text-emerald-700 dark:hover:text-emerald-300 transition-transform duration-200 hover:scale-110"
+              >
                         {showConfirmPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
                       </button>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-6 flex items-start gap-2 text-xs text-emerald-700">
+                <div className="mt-6 flex items-start gap-2 text-xs text-emerald-700 dark:text-emerald-300">
                   <input type="checkbox" checked={acceptedTerms} onChange={() => setAcceptedTerms(!acceptedTerms)} className="mt-1 accent-emerald-600" />
                   <p>
                     Li e aceito os{" "}
-                    <Link to="/termos" className="underline cursor-pointer hover:text-emerald-900 transition">Termos de Uso</Link>,{" "}
-                    <Link to="/privacidade" className="underline cursor-pointer hover:text-emerald-900 transition">Política de Privacidade</Link>{" "}
+                    <Link to="/termos" className="underline cursor-pointer hover:text-emerald-900 dark:hover:text-emerald-100 transition">Termos de Uso</Link>,{" "}
+                    <Link to="/privacidade" className="underline cursor-pointer hover:text-emerald-900 dark:hover:text-emerald-100 transition">Política de Privacidade</Link>{" "}
                     e{" "}
-                    <Link to="/cookies" className="underline cursor-pointer hover:text-emerald-900 transition">Política de Cookies</Link>.
+                    <Link to="/cookies" className="underline cursor-pointer hover:text-emerald-900 dark:hover:text-emerald-100 transition">Política de Cookies</Link>.
                   </p>
                 </div>
 
@@ -296,16 +291,17 @@ export default function RegisterConsumer() {
           {step === 'verify' && (
             <div className="text-center space-y-6">
               <div className="flex justify-center">
-                <div className="h-20 w-20 rounded-full bg-emerald-100 flex items-center justify-center">
-                  <KeyIcon className="h-10 w-10 text-emerald-600" />
+                  <div className="h-20 w-20 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center">
+                  <KeyIcon className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
                 </div>
               </div>
               <div>
-                <h2 className="text-2xl font-semibold text-emerald-900">Verifique seu email</h2>
-                <p className="text-sm text-emerald-700 mt-2">
-                  Enviamos um código de 6 dígitos para <strong>{userEmail}</strong>.<br/>
-                  O código expira em 15 minutos.
-                </p>
+                <h2 className="text-2xl font-semibold text-emerald-900 dark:text-emerald-100">Verifique seu email</h2>
+              <p className="text-sm text-emerald-700 dark:text-emerald-300 mt-2">
+                Enviamos um código de 6 dígitos para <strong>{userEmail}</strong>.<br/>
+                O código expira em 15 minutos.
+              </p>
+              {localVerificationCode && <p className="mt-3 rounded-lg bg-amber-100 px-3 py-2 text-xs font-semibold text-amber-900 dark:bg-amber-400/15 dark:text-amber-200">Modo local: use o código {localVerificationCode}</p>}
               </div>
 
               <form onSubmit={handleVerify} className="max-w-xs mx-auto space-y-4">
@@ -333,9 +329,10 @@ export default function RegisterConsumer() {
                 </button>
               </form>
 
-              <button onClick={() => setStep('form')} className="text-sm text-emerald-600 hover:text-emerald-800 underline">
+              <button onClick={() => setStep('form')} className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-200 underline">
                 Voltar e corrigir dados
               </button>
+              {!isFormValid && <p className="mt-3 text-center text-xs text-slate-500 dark:text-slate-400">Preencha todos os campos, use uma senha de pelo menos 8 caracteres e confirme e-mail, senha e termos.</p>}
             </div>
           )}
         </div>
@@ -347,10 +344,10 @@ export default function RegisterConsumer() {
 function Input({ icon: Icon, label, name, value, onChange, type = "text", placeholder }: any) {
   return (
     <div>
-      <label className="text-xs text-emerald-800">{label}</label>
+      <label className="text-xs text-emerald-800 dark:text-emerald-200">{label}</label>
       <div className="relative">
         <Icon className="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500" />
-        <input type={type} name={name} value={value} onChange={onChange} placeholder={placeholder} className="w-full rounded-xl bg-emerald-50 border border-emerald-300 pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+        <input type={type} name={name} value={value} onChange={onChange} placeholder={placeholder} className="w-full rounded-xl bg-emerald-50 dark:bg-slate-800/70 border border-emerald-300 dark:border-slate-600 pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
       </div>
     </div>
   );
