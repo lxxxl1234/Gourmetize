@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
@@ -42,14 +40,14 @@ class AuthController extends Controller
         // 2. Processar o upload da foto de perfil (se enviada)
         $profilePicturePath = null;
         if ($request->hasFile('profile_picture')) {
-            $profilePicturePath = $request->file('profile_picture')->store('profile-pictures', 'public');
+            $profilePicturePath = $request->file('profile_picture')->store('profile-pictures');
         }
 
         // 3. Processar o upload do documento orgânico (se existir e for válido)
         $documentPath = null;
         if ($request->hasFile('organic_document')) {
-            // Salva em storage/app/public/organic-documents
-            $documentPath = $request->file('organic_document')->store('organic-documents', 'public');
+            // Documentos pessoais não podem ficar acessíveis por URL pública.
+            $documentPath = $request->file('organic_document')->store('organic-documents');
         }
 
         // 4. Gerar código de verificação de 6 dígitos
