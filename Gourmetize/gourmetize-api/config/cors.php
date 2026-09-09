@@ -12,7 +12,8 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    // Defina FRONTEND_URL no ambiente de produção (ex.: https://app.gourmetize.com.br).
+    'allowed_origins' => array_filter(explode(',', env('CORS_ALLOWED_ORIGINS', env('FRONTEND_URL', 'http://localhost:5173')))),
 
     'allowed_origins_patterns' => [],
 
