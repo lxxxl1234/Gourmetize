@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -59,5 +60,20 @@ class User extends Authenticatable
             'has_organic_certificate' => 'boolean', // <-- Adicionado
             'organic_expiry_date' => 'date',        // <-- Adicionado
         ];
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'producer_id');
+    }
+
+    public function purchases(): HasMany
+    {
+        return $this->hasMany(Order::class, 'consumer_id');
+    }
+
+    public function sales(): HasMany
+    {
+        return $this->hasMany(Order::class, 'producer_id');
     }
 }
