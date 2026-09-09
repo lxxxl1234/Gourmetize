@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginAccount, loginDemoAdmin, loginDemoProducer } from "../lib/auth";
+import { loginAccount, startSession } from "../lib/auth";
 import logo from "../assets/imagens/logo.jpeg";
 import {
   EyeIcon,
@@ -40,8 +40,7 @@ export default function Login() {
       setSuccessMessage(response.message || "Login realizado com sucesso!");
       
       // Salva o token no localStorage
-      localStorage.setItem("auth_token", response.token);
-      localStorage.setItem("user", JSON.stringify(response.user));
+      startSession(response.token, response.user);
       
       // Redireciona para a home após 1.5 segundos
       setTimeout(() => navigate("/dashboard"), 1500);
@@ -189,10 +188,6 @@ export default function Login() {
             <Link to="/registro" className="hover:underline cursor-pointer">
               Criar conta
             </Link>
-          </div>
-          <div className="mt-5 grid grid-cols-2 gap-2">
-            <button type="button" onClick={() => { loginDemoProducer(); navigate("/dashboard"); }} className="rounded-xl border border-dashed border-emerald-300 py-2 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-50">Acessar produtor demo</button>
-            <button type="button" onClick={() => { loginDemoAdmin(); navigate("/dashboard"); }} className="rounded-xl border border-dashed border-emerald-300 py-2 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-50">Acessar admin demo</button>
           </div>
         </div>
         </form>
